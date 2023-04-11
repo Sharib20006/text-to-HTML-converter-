@@ -122,11 +122,10 @@ function convertTextToBlogPost() {
 
   for (var i = 0; i < lines.length; i++) {
     var line = lines[i];
-    if (line.trim().startsWith("#")) {
-      var headingLevel = parseInt(line.match(/^#+/)[0].length);
-      if (headingLevel > 0 && headingLevel <= 6) {
-        blogPost += "<h" + headingLevel + ">" + line.substr(line.indexOf(" ") + 1) + "</h" + headingLevel + ">\n";
-      }
+if (line.trim().match(/^#[1-6]\s/)) {
+  var headingLevel = parseInt(line.match(/^#+/)[0].length);
+  blogPost += "<h" + headingLevel + ">" + line.substr(line.indexOf(" ") + 1) + "</h" + headingLevel + ">\n";
+}
     } else if (line.trim().match(/^\d+\./)) {
       if (listType !== "ordered") {
         if (listOpen) {
@@ -164,10 +163,19 @@ function convertTextToBlogPost() {
       blogPost += "<important>\n";
       blogPost += line.substr(1).trim() + "\n";
       blogPost += "</important>\n";
-    } else if (line.trim().includes(" : ")) {
-      var linkText = line.substr(0, line.indexOf(" : ")).trim();
-      var linkURL = line.substr(line.indexOf(" : ") + 3).trim();
+}
+else if (line.trim().startsWith("'")) {
+  var linkText = "";
+  var linkURL = "";
+  var linkEndIndex = line.lastIndexOf("'");
+  if (linkEndIndex > -1) {
+    linkURL = line.substring(line.lastIndexOf(":", linkEndIndex - 1) + 1, linkEndIndex).trim();
+    linkText = line.substring(1, line.lastIndexOf(":", linkEndIndex - 1)).trim();
+    if (linkText && linkURL) {
       blogPost += "<a href='" + linkURL + "'>" + linkText + "</a>\n";
+    }
+  }
+}
     } else {
       if (codeBlockOpen) {
         blogPost += line + "\n";
