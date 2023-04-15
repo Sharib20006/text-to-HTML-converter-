@@ -161,27 +161,32 @@ function convertTextToBlogPost() {
     } else if (line.trim().startsWith("'")) {
       var linkText = "";
       var linkURL = "";
-      var linkEndIndex = line.lastIndexOf("'");
-      if (linkEndIndex > -1) {
-        linkURL = line.substring(line.lastIndexOf(":", linkEndIndex - 1) + 1, linkEndIndex).trim();
-        linkText = line.substring(1, line.lastIndexOf(":", linkEndIndex - 1)).trim();
-        if (linkText && linkURL) {
-          blogPost += "<a href='" + linkURL + "'>" + linkText + "</a>\n";
-        }
-      }
-    } else {
-      if (codeBlockOpen) {
-        blogPost += line + "\n";
-      } else {
-        if (listOpen) {
-          if (listType === "ordered") {
-            blogPost += "</ol>\n";
-          } else {
-            blogPost += "</ul>\n";
+      if (line.trim().startsWith("'")) {
+        var linkEndIndex = line.lastIndexOf("'");
+        if (linkEndIndex > -1) {
+          var linkParts = line.substring(1, linkEndIndex).split(" : ");
+          if (linkParts.length == 2) {
+            linkURL = linkParts[1].trim();
+            linkText = linkParts[0].trim();
+            if (linkText && linkURL) {
+              blogPost += "<a href='" + linkURL + "'>" + linkText + "</a>\n";
+            }
           }
-          listOpen = false;
+        } 
+      } else {
+        if (codeBlockOpen) {
+          blogPost += line + "\n";
+        } else {
+          if (listOpen) {
+            if (listType === "ordered") {
+              blogPost += "</ol>\n";
+            } else {
+              blogPost += "</ul>\n";
+            }
+            listOpen = false;
+          }
+          blogPost += "<p>" + line + "</p>\n";
         }
-        blogPost += "<p>" + line + "</p>\n";
       }
     }
   }
@@ -249,7 +254,7 @@ function createDropDown() {
   
   dropDown.addEventListener("change", function() {
     if (this.value === "info") {
-      alert("Developer: Syed Sharib Ali. Version: 1.0.");
+      alert("Developer: Syed Sharib Ali. Version: 1.5.");
     } else {
       window.location.href = this.value;
     }
