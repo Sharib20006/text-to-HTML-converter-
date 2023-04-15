@@ -200,14 +200,25 @@ function convertTextToBlogPost() {
 
 function copyToClipboard() {
   const textToCopy = document.getElementById("blogPostOutput").innerHTML.trim();
-  const promptText = "Copy the following text:\n\n" + textToCopy;
-  const confirmation = prompt(promptText);
-  if (confirmation !== null && confirmation.toLowerCase() === "ok") {
-    navigator.clipboard.writeText(textToCopy)
-      .then(() => alert("Copied to clipboard!"))
-      .catch((error) => alert("Unable to copy to clipboard. Please copy manually.\n\nError: " + error));
-  }
+  const input = document.createElement("input");
+  input.setAttribute("type", "text");
+  input.setAttribute("readonly", true);
+  input.setAttribute("value", textToCopy);
+  const resultDiv = document.getElementById("result");
+  resultDiv.innerHTML = "";
+  resultDiv.appendChild(input);
+  const copyButton = document.createElement("button");
+  copyButton.innerText = "Copy Code";
+  copyButton.addEventListener("click", function() {
+    input.select();
+    document.execCommand("copy");
+    alert("Copied to clipboard!");
+  });
+  resultDiv.appendChild(copyButton);
 }
+
+
+
 function createDropDown() {
   const dropDown = document.createElement("select");
   dropDown.classList.add("dropdown");
@@ -254,15 +265,18 @@ function createDropDown() {
   <main>
     <section>
       <h2>Create a New Blog Post</h2>
-      <textarea id="textInput" rows="10" cols="50"></textarea>
+<label for="textInput">Enter your text to convert:</label> 
+<textarea id="textInput" rows="10" cols="50"></textarea>
       <button onclick="convertTextToBlogPost()">Convert to Blog Post</button>
     </section>
     <section>
       <h2>Blog Post Output</h2>
       <div id="blogPostOutput"></div>
       <button onclick="copyToClipboard()">Copy to Clipboard</button>
+<div id="result">
+</div>
+<button onclick="createDropDown()"> get help </button>
     </section>
   </main>
-<button onclick="createDropDown()"> get help </button>
 </body>
 </html>
