@@ -221,12 +221,16 @@ function copyToClipboard() {
   });
   resultDiv.appendChild(copyButton);
 }
-
-
-
 function createDropDown() {
   const dropDown = document.createElement("select");
   dropDown.classList.add("dropdown");
+
+  const selectOption = document.createElement("option");
+  selectOption.value = "";
+  selectOption.textContent = "Select your destiny";
+  selectOption.selected = true;
+  selectOption.disabled = true;
+  dropDown.appendChild(selectOption);
 
   const mailOption = document.createElement("option");
   mailOption.value = "mailto:Sayyadsharibali@gmail.com";
@@ -245,7 +249,7 @@ function createDropDown() {
 
   const infoOption = document.createElement("option");
   infoOption.value = "info";
-  infoOption.textContent = "More info";
+  infoOption.textContent = "More info (Version 1.5)";
   dropDown.appendChild(infoOption);
 
   document.body.appendChild(dropDown);
